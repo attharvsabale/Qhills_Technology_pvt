@@ -56,6 +56,7 @@ export default function AccountPage() {
   useEffect(() => {
     if (user) {
       const [first, ...rest] = user.name.split(" ");
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFirstName(first ?? "");
       setLastName(rest.join(" "));
       setEmail(user.email);

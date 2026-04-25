@@ -16,6 +16,7 @@ import {
 import { listCustomers } from "@/services/admin";
 import type { Customer as LiveCustomer } from "@/types";
 import { formatDate } from "@/lib/utils";
+import { Pagination } from "@/components/ui/pagination";
 
 /* --------------------------------- Data --------------------------------- */
 
@@ -242,6 +243,8 @@ function CustomerChart() {
 export default function CustomersPage() {
   const [range, setRange] = useState<"this" | "last">("this");
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 8;
 
   const { data: liveCustomers = [], isLoading } = useQuery({
     queryKey: ["admin-customers"],
@@ -250,6 +253,8 @@ export default function CustomersPage() {
   });
 
   const customers = liveCustomers.map(toViewCustomer);
+  const totalPages = Math.max(1, Math.ceil(customers.length / PAGE_SIZE));
+  const visibleCustomers = customers.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const selected = customers[selectedIdx] ?? customers[0];
 
   return (
@@ -333,7 +338,7 @@ export default function CustomersPage() {
           </div>
 
           {/* Inline stats */}
-          <div className="mt-5 grid grid-cols-4 gap-4">
+          <div className="mt-5 grid grid-cols-2 gap-4 md:grid-cols-4">
             <div>
               <p className="text-xl font-semibold text-neutral-900">25k</p>
               <p className="text-xs text-neutral-500 border-b-2 border-emerald-500 pb-1 inline-block mt-1">
@@ -368,7 +373,7 @@ export default function CustomersPage() {
           {/* Customers table */}
           <Card className="p-0 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full min-w-[820px] text-sm whitespace-nowrap">
                 <thead>
                   <tr className="bg-emerald-50/60 text-neutral-600">
                     <th className="text-left font-medium px-5 py-3">Customer Id</th>
@@ -399,12 +404,14 @@ export default function CustomersPage() {
                       </td>
                     </tr>
                   )}
-                  {customers.map((c, i) => (
+                  {visibleCustomers.map((c, i) => {
+                    const absoluteIdx = (page - 1) * PAGE_SIZE + i;
+                    return (
                     <tr
                       key={c.rawId}
-                      onClick={() => setSelectedIdx(i)}
+                      onClick={() => setSelectedIdx(absoluteIdx)}
                       className={`border-t border-neutral-100 cursor-pointer transition ${
-                        selectedIdx === i ? "bg-neutral-100" : "hover:bg-neutral-50"
+                        selectedIdx === absoluteIdx ? "bg-neutral-100" : "hover:bg-neutral-50"
                       }`}
                     >
                       <td className="px-5 py-3 text-neutral-700">{c.id}</td>
@@ -432,38 +439,14 @@ export default function CustomersPage() {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
 
             {/* Pagination */}
-            <div className="flex items-center justify-between px-5 py-4 border-t border-neutral-100">
-              <button className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50">
-                ← Previous
-              </button>
-              <div className="flex items-center gap-1 text-sm">
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <button
-                    key={n}
-                    className={`h-8 w-8 rounded-md ${
-                      n === 1
-                        ? "bg-emerald-600 text-white"
-                        : "text-neutral-600 hover:bg-neutral-100"
-                    }`}
-                  >
-                    {n}
-                  </button>
-                ))}
-                <span className="px-2 text-neutral-400">.....</span>
-                <button className="h-8 w-8 rounded-md text-neutral-600 hover:bg-neutral-100">
-                  24
-                </button>
-              </div>
-              <button className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50">
-                Next →
-              </button>
-            </div>
+            <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
           </Card>
 
           {/* Customer detail card */}

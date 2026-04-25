@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { listOrders, getDashboardMetrics } from "@/services/admin";
 import { formatDate } from "@/lib/utils";
+import { Pagination } from "@/components/ui/pagination";
 import type { Order } from "@/types";
 
 /* --------------------------------- Data --------------------------------- */
@@ -209,17 +210,12 @@ export default function OrdersPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const visible = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const pages: (number | "dots")[] =
-    totalPages <= 7
-      ? Array.from({ length: totalPages }, (_, i) => i + 1)
-      : [1, 2, 3, 4, 5, "dots", totalPages];
-
   return (
     <div className="space-y-6">
       {/* Header row */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-xl font-semibold tracking-tight">Order List</h2>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-700">
             <Plus size={14} /> Add Order
           </button>
@@ -261,7 +257,7 @@ export default function OrdersPage() {
       {/* Orders table card */}
       <Card className="p-0">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-100 px-5 py-4">
-          <div className="inline-flex items-center gap-1 rounded-full bg-neutral-50 p-1">
+          <div className="-mx-1 flex max-w-full items-center gap-1 overflow-x-auto rounded-full bg-neutral-50 p-1">
             {tabKeys.map((k) => (
               <button
                 key={k}
@@ -287,8 +283,8 @@ export default function OrdersPage() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
-            <label className="relative">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+            <label className="relative w-full sm:w-auto">
               <Search
                 size={14}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
@@ -300,7 +296,7 @@ export default function OrdersPage() {
                   setPage(1);
                 }}
                 placeholder="Search order report"
-                className="h-9 w-64 rounded-full border border-neutral-200 bg-white pl-9 pr-3 text-sm outline-none focus:border-emerald-500"
+                className="h-9 w-full rounded-full border border-neutral-200 bg-white pl-9 pr-3 text-sm outline-none focus:border-emerald-500 sm:w-64"
               />
             </label>
             <button className="grid h-9 w-9 place-items-center rounded-md border border-neutral-200 text-neutral-500 hover:bg-neutral-50">
@@ -316,7 +312,7 @@ export default function OrdersPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[820px] text-sm whitespace-nowrap">
             <thead>
               <tr className="bg-emerald-50/60 text-left text-xs font-medium text-neutral-600">
                 <th className="px-5 py-3">
@@ -405,43 +401,7 @@ export default function OrdersPage() {
         </div>
 
         {/* Pagination */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-neutral-100 px-5 py-4">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
-          >
-            <span aria-hidden>←</span> Previous
-          </button>
-
-          <div className="flex items-center gap-1">
-            {pages.map((p, i) =>
-              p === "dots" ? (
-                <span key={`d-${i}`} className="px-2 text-neutral-400">
-                  …
-                </span>
-              ) : (
-                <button
-                  key={p}
-                  onClick={() => setPage(p)}
-                  className={`grid h-8 w-8 place-items-center rounded-md text-sm ${
-                    page === p
-                      ? "bg-emerald-600 text-white shadow-sm"
-                      : "text-neutral-600 hover:bg-neutral-100"
-                  }`}
-                >
-                  {p}
-                </button>
-              )
-            )}
-          </div>
-
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
-          >
-            Next <span aria-hidden>→</span>
-          </button>
-        </div>
+        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </Card>
     </div>
   );

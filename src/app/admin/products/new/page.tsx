@@ -453,7 +453,7 @@ export default function AddProductPage() {
               </div>
             </div>
 
-            <div className="mt-3 grid grid-cols-3 gap-3">
+            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {thumbs.map((src, i) => (
                 <div
                   key={i}

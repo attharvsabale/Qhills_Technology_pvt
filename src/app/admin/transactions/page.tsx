@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { listTransactions, getDashboardMetrics } from "@/services/admin";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { Pagination } from "@/components/ui/pagination";
 import type { Transaction } from "@/types";
 
 /* --------------------------------- Data --------------------------------- */
@@ -108,14 +109,42 @@ function StatusText({ status }: { status: TxStatus }) {
 
 function CreditCard() {
   return (
-    <div className="w-full max-w-[320px]">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/card.svg"
-        alt="Finaci card"
-        className="w-full h-auto rounded-2xl select-none"
-        draggable={false}
-      />
+    <div
+      className="relative w-full max-w-[320px] aspect-[260/164] rounded-2xl overflow-hidden text-white shadow-lg select-none bg-[url('/credit-green-card-bg.svg')] bg-cover bg-center"
+      aria-label="Finaci credit card"
+    >
+      {/* Top row: brand + chip */}
+      <div className="absolute inset-x-0 top-0 flex items-start justify-between p-4">
+        <div className="text-[11px] font-semibold tracking-[0.2em] uppercase opacity-90">
+          Finaci
+        </div>
+        <div className="h-6 w-8 rounded-[4px] bg-gradient-to-br from-yellow-200 to-yellow-500 shadow-inner" />
+      </div>
+
+      {/* Card number */}
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-4 font-mono text-[15px] tracking-[0.18em] tabular-nums">
+        4242&nbsp;&nbsp;5678&nbsp;&nbsp;9012&nbsp;&nbsp;3456
+      </div>
+
+      {/* Bottom row: holder + expiry + brand mark */}
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4">
+        <div className="leading-tight">
+          <div className="text-[9px] uppercase tracking-widest opacity-70">
+            Card Holder
+          </div>
+          <div className="text-[12px] font-medium">Mark Anderson</div>
+        </div>
+        <div className="leading-tight text-right">
+          <div className="text-[9px] uppercase tracking-widest opacity-70">
+            Expires
+          </div>
+          <div className="text-[12px] font-medium tabular-nums">08/29</div>
+        </div>
+        <div className="flex items-center -space-x-2" aria-hidden>
+          <span className="h-5 w-5 rounded-full bg-rose-500/90" />
+          <span className="h-5 w-5 rounded-full bg-amber-400/90" />
+        </div>
+      </div>
     </div>
   );
 }
@@ -125,6 +154,8 @@ function CreditCard() {
 export default function TransactionsPage() {
   const [activeTab, setActiveTab] = useState<TabKey>("all");
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 12;
 
   const { data: txs = [], isLoading } = useQuery({
     queryKey: ["admin-transactions"],
@@ -255,46 +286,48 @@ export default function TransactionsPage() {
       <div className="rounded-2xl border border-neutral-200 bg-white">
         {/* Toolbar */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4">
-          <div className="flex items-center rounded-full bg-neutral-50 p-0.5 text-sm">
-            {tabKeys.map((k) => (
-              <button
-                key={k}
-                onClick={() => setActiveTab(k)}
-                className={`px-3 py-1.5 rounded-full transition ${
-                  activeTab === k
-                    ? "bg-white text-emerald-600 shadow-sm"
-                    : "text-neutral-500 hover:text-neutral-700"
-                }`}
-              >
-                {tabLabels[k]}
-                <span
-                  className={`ml-1 ${
-                    activeTab === k ? "text-emerald-600" : "text-neutral-400"
+          <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:overflow-visible sm:px-0">
+            <div className="inline-flex items-center rounded-full bg-neutral-50 p-0.5 text-sm whitespace-nowrap">
+              {tabKeys.map((k) => (
+                <button
+                  key={k}
+                  onClick={() => setActiveTab(k)}
+                  className={`px-3 py-1.5 rounded-full transition shrink-0 ${
+                    activeTab === k
+                      ? "bg-white text-emerald-600 shadow-sm"
+                      : "text-neutral-500 hover:text-neutral-700"
                   }`}
                 >
-                  ({counts[k]})
-                </span>
-              </button>
-            ))}
+                  {tabLabels[k]}
+                  <span
+                    className={`ml-1 ${
+                      activeTab === k ? "text-emerald-600" : "text-neutral-400"
+                    }`}
+                  >
+                    ({counts[k]})
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="relative">
+            <div className="relative flex-1 sm:flex-initial">
               <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search payment history"
-                className="pl-9 pr-3 h-9 w-60 rounded-full bg-neutral-50 border border-neutral-200 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-emerald-100"
+                className="pl-9 pr-3 h-9 w-full sm:w-60 rounded-full bg-neutral-50 border border-neutral-200 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-emerald-100"
               />
             </div>
-            <button className="h-9 w-9 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-700" aria-label="Filter">
+            <button className="h-9 w-9 shrink-0 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-700" aria-label="Filter">
               <Filter className="h-4 w-4" />
             </button>
-            <button className="h-9 w-9 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-700" aria-label="Sort">
+            <button className="h-9 w-9 shrink-0 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-700" aria-label="Sort">
               <ArrowUpDown className="h-4 w-4" />
             </button>
-            <button className="h-9 w-9 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-700" aria-label="More">
+            <button className="h-9 w-9 shrink-0 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-700" aria-label="More">
               <MoreHorizontal className="h-4 w-4" />
             </button>
           </div>
@@ -302,7 +335,7 @@ export default function TransactionsPage() {
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[820px] text-sm whitespace-nowrap">
             <thead>
               <tr className="bg-emerald-50/60 text-neutral-600">
                 <th className="text-left font-medium px-5 py-3">Transaction</th>
@@ -332,7 +365,7 @@ export default function TransactionsPage() {
                   </td>
                 </tr>
               )}
-              {filtered.slice(0, 12).map((t) => (
+              {filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((t) => (
                 <tr key={t.id} className="border-t border-neutral-100 hover:bg-neutral-50/60">
                   <td className="px-5 py-3 text-neutral-700">{t.id}</td>
                   <td className="px-5 py-3 text-neutral-700">{t.customer}</td>
@@ -352,28 +385,11 @@ export default function TransactionsPage() {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between px-5 py-4 border-t border-neutral-100">
-          <button className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50">
-            ← Previous
-          </button>
-          <div className="flex items-center gap-1 text-sm">
-            {[1, 2, 3, 4, 5].map((n) => (
-              <button
-                key={n}
-                className={`h-8 w-8 rounded-md ${
-                  n === 1 ? "bg-emerald-600 text-white" : "text-neutral-600 hover:bg-neutral-100"
-                }`}
-              >
-                {n}
-              </button>
-            ))}
-            <span className="px-2 text-neutral-400">.....</span>
-            <button className="h-8 w-8 rounded-md text-neutral-600 hover:bg-neutral-100">24</button>
-          </div>
-          <button className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50">
-            Next →
-          </button>
-        </div>
+        <Pagination
+          page={page}
+          totalPages={Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   );

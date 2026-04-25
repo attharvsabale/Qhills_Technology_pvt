@@ -27,6 +27,7 @@ export default function ProductsAdminPage() {
   const [cat, setCat] = useState<string>("all");
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (fetched?.items) setProducts(fetched.items);
   }, [fetched]);
 
@@ -79,7 +80,7 @@ export default function ProductsAdminPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[820px] text-sm whitespace-nowrap">
             <thead className="bg-neutral-50 text-xs uppercase tracking-wider text-[var(--color-muted-fg)]">
               <tr>
                 <th className="px-5 py-3 text-left font-medium">Product</th>

@@ -78,6 +78,13 @@ export default async function HomePage() {
             <div className="relative grid items-center gap-6 px-8 py-10 md:grid-cols-2 md:px-12 md:py-14">
               <div className="text-white">
                 <div className="mb-4 flex items-center gap-3 text-sm">
+                  <Image
+                    src="/1200px-Apple_gray_logo 1.png"
+                    alt="Apple"
+                    width={40}
+                    height={49}
+                    className="h-10 w-auto"
+                  />
                   <span>iPhone 14 Series</span>
                 </div>
                 <h1 className="text-3xl font-semibold leading-tight md:text-5xl">
@@ -92,16 +99,28 @@ export default async function HomePage() {
                   Shop Now <ArrowRight size={16} />
                 </Link>
               </div>
-              <div className="relative aspect-[4/3] w-full">
+              <div className="relative aspect-[4/3] w-full md:scale-110 lg:scale-125">
                 <Image
-                  src="https://images.unsplash.com/photo-1592286927505-1def25115558?w=1000&q=75"
+                  src="/hero_endframe__cvklg0xk3w6e_large 2.png"
                   alt="iPhone 14"
                   fill
                   priority
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 768px) 100vw, 60vw"
                   className="object-contain"
                 />
               </div>
+            </div>
+            <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-3">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <span
+                  key={i}
+                  className={`h-3 w-3 rounded-full border-2 border-white ${
+                    i === 2
+                      ? "bg-[var(--color-primary)] ring-2 ring-white"
+                      : "bg-white/40"
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </Container>
@@ -219,13 +238,23 @@ export default async function HomePage() {
                   </Link>
                 </div>
               </div>
-              <div className="relative aspect-[4/3] w-full">
+              <div className="relative aspect-[4/3] w-full md:scale-110">
+                {/* Radial fade glow behind speaker */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute left-1/2 top-1/2 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                    background:
+                      "radial-gradient(circle at center, rgba(200,200,200,0.55) 0%, rgba(140,140,140,0.35) 25%, rgba(70,70,70,0.18) 50%, rgba(0,0,0,0) 75%)",
+                    filter: "blur(30px)",
+                  }}
+                />
                 <Image
-                  src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=1100&q=75"
-                  alt="Speaker"
+                  src="/JBL_BOOMBOX_2_HERO_020_x1 (1) 1.png"
+                  alt="JBL Boombox"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-contain"
+                  className="relative object-contain"
                 />
               </div>
             </div>

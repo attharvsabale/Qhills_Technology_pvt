@@ -12,6 +12,7 @@ import {
   Search,
   Trash2,
 } from "lucide-react";
+import { Pagination } from "@/components/ui/pagination";
 
 /* --------------------------------- Data --------------------------------- */
 
@@ -54,12 +55,17 @@ export default function CategoriesPage() {
   const [activeTab, setActiveTab] = useState<string>("all");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 8;
 
   const filtered = products.filter((p) => {
     if (activeCategory && p.category !== activeCategory) return false;
     if (query && !p.name.toLowerCase().includes(query.toLowerCase())) return false;
     return true;
   });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const visible = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
     <div className="space-y-5">
@@ -120,7 +126,8 @@ export default function CategoriesPage() {
       <div className="rounded-2xl border border-neutral-200 bg-white">
         {/* Toolbar */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4">
-          <div className="flex items-center rounded-full bg-neutral-50 p-0.5 text-sm">
+          <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:overflow-visible sm:px-0">
+          <div className="inline-flex items-center rounded-full bg-neutral-50 p-0.5 text-sm whitespace-nowrap">
             {tabs.map((t) => (
               <button
                 key={t.key}
@@ -144,24 +151,25 @@ export default function CategoriesPage() {
               </button>
             ))}
           </div>
+          </div>
 
           <div className="flex items-center gap-2">
-            <div className="relative">
+            <div className="relative flex-1 sm:flex-initial">
               <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search your product"
-                className="pl-9 pr-3 h-9 w-60 rounded-full bg-neutral-50 border border-neutral-200 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-emerald-100"
+                className="pl-9 pr-3 h-9 w-full sm:w-60 rounded-full bg-neutral-50 border border-neutral-200 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-emerald-100"
               />
             </div>
-            <button className="h-9 w-9 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-700" aria-label="Filter">
+            <button className="h-9 w-9 shrink-0 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-700" aria-label="Filter">
               <Filter className="h-4 w-4" />
             </button>
-            <button className="h-9 w-9 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-700" aria-label="Add">
+            <button className="h-9 w-9 shrink-0 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-700" aria-label="Add">
               <Plus className="h-4 w-4" />
             </button>
-            <button className="h-9 w-9 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-700" aria-label="More">
+            <button className="h-9 w-9 shrink-0 rounded-lg border border-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-700" aria-label="More">
               <MoreHorizontal className="h-4 w-4" />
             </button>
           </div>
@@ -169,7 +177,7 @@ export default function CategoriesPage() {
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[720px] text-sm whitespace-nowrap">
             <thead>
               <tr className="bg-emerald-50/60 text-neutral-600">
                 <th className="text-left font-medium px-5 py-3 w-10"></th>
@@ -189,12 +197,12 @@ export default function CategoriesPage() {
                   </td>
                 </tr>
               )}
-              {filtered.map((p, i) => (
+              {visible.map((p, i) => (
                 <tr key={i} className="border-t border-neutral-100 hover:bg-neutral-50/60">
                   <td className="px-5 py-3">
                     <input type="checkbox" className="h-4 w-4 rounded border-neutral-300" />
                   </td>
-                  <td className="px-5 py-3 text-neutral-700">{i + 1}</td>
+                  <td className="px-5 py-3 text-neutral-700">{(page - 1) * PAGE_SIZE + i + 1}</td>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-3">
                       <div className="relative h-8 w-8 shrink-0 rounded-md overflow-hidden bg-neutral-100">
@@ -222,28 +230,7 @@ export default function CategoriesPage() {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between px-5 py-4 border-t border-neutral-100">
-          <button className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50">
-            ← Previous
-          </button>
-          <div className="flex items-center gap-1 text-sm">
-            {[1, 2, 3, 4, 5].map((n) => (
-              <button
-                key={n}
-                className={`h-8 w-8 rounded-md ${
-                  n === 1 ? "bg-emerald-600 text-white" : "text-neutral-600 hover:bg-neutral-100"
-                }`}
-              >
-                {n}
-              </button>
-            ))}
-            <span className="px-2 text-neutral-400">.....</span>
-            <button className="h-8 w-8 rounded-md text-neutral-600 hover:bg-neutral-100">24</button>
-          </div>
-          <button className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50">
-            Next →
-          </button>
-        </div>
+        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
     </div>
   );
