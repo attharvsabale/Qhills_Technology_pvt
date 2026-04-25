@@ -280,6 +280,3 @@ account.
 - Money is rendered with simple `toFixed(2)` formatting; swap in `Intl.NumberFormat` if you need locale-aware currency.
 - ESLint runs on `npm run lint` (flat config, `next/core-web-vitals` + TypeScript).
 
-## License
-
-MIT
