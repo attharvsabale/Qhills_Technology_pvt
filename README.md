@@ -2,8 +2,6 @@
 
 A production-ready, responsive multi-category e-commerce frontend built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS v4**, **Zustand**, and **TanStack Query**. It ships with a complete customer storefront and an admin dashboard, backed by the public [DummyJSON](https://dummyjson.com) API.
 
-> Built for the "E-Commerce Frontend Development Challenge". Figma reference: [E-Commerce Challenge](https://www.figma.com/design/7QddZLpijDAk2EN3lmiift/E-Commerce-Challenge).
-
 ---
 
 ## Table of contents
@@ -277,22 +275,7 @@ DummyJSON  ──fetch──▶  src/services/*.ts  ──map──▶  Domain t
 
 ---
 
-## Deployment (Vercel)
-
-1. Push the repo to GitHub.
-2. Open [vercel.com/new](https://vercel.com/new) and import it.
-3. Framework preset auto-detects **Next.js**. No env vars required.
-4. Click **Deploy**.
-
-If you add new image hosts, remember to extend `images.remotePatterns` in [next.config.ts](next.config.ts).
-
----
-
-## Conventions & notes
-
-- **This is Next.js 16** — APIs and conventions can differ from older training data. Check `node_modules/next/dist/docs/` before reaching for memory. (See [AGENTS.md](AGENTS.md).)
-- Path alias `@/*` maps to `src/*` ([tsconfig.json](tsconfig.json)).
-- All data is mocked through DummyJSON; there is no real backend. "Auth" is a fake local flow — sign up with any details to unlock `/account`.
+account.
 - Admin pages are not gated — they're a UI demo, not a secure surface.
 - Money is rendered with simple `toFixed(2)` formatting; swap in `Intl.NumberFormat` if you need locale-aware currency.
 - ESLint runs on `npm run lint` (flat config, `next/core-web-vitals` + TypeScript).
