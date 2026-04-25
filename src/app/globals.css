@@ -1,21 +1,46 @@
 @import "tailwindcss";
 
 @theme {
+  /* Surfaces & text */
   --color-bg: #ffffff;
   --color-fg: #0a0a0a;
-  --color-muted: #f5f5f5;
-  --color-muted-fg: #6b7280;
+  --color-muted: #f5f7f5;
+  --color-muted-fg: #7c7c7c; /* Grey – helper / deemphasized text */
   --color-border: #e5e7eb;
-  --color-primary: #111111;
-  --color-primary-fg: #ffffff;
-  --color-accent: #ff6b2c;
-  --color-accent-fg: #ffffff;
-  --color-success: #16a34a;
-  --color-danger: #dc2626;
-  --color-warning: #f59e0b;
-  --color-info: #2563eb;
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+  /* Brand – Ocean Green (primary) */
+  --color-primary: #4ea674;
+  --color-primary-fg: #ffffff;
+  --color-primary-hover: #3f9163;
+
+  /* Brand – Cyprus (secondary / dark CTA) */
+  --color-secondary: #023337;
+  --color-secondary-fg: #ffffff;
+
+  /* Brand – Surf Crest (light secondary bg / hairlines) */
+  --color-surf: #c1e8ba;
+  --color-surf-fg: #023337;
+
+  /* Brand – Aqua Spring (accent surface / subtle bg) */
+  --color-aqua: #eafbe7;
+  --color-aqua-fg: #023337;
+
+  /* Accent – Indigo (gradient CTAs / focus) */
+  --color-accent: #6467f2;
+  --color-accent-fg: #ffffff;
+  --color-accent-2: #4f46e5;
+
+  /* States */
+  --color-success: #23c45d;
+  --color-warning: #f0d451;
+  --color-danger: #ef4343;
+  --color-info: #6467f2;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(90deg, #6467f2 0%, #4f46e5 100%);
+  --gradient-brand: linear-gradient(90deg, #4ea674 0%, #6467f2 100%);
+
+  --font-sans: var(--font-lato), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
     Monaco, Consolas, monospace;
@@ -38,10 +63,64 @@
     background: var(--color-bg);
     color: var(--color-fg);
     font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.4;
     -webkit-font-smoothing: antialiased;
   }
   a {
     color: inherit;
+  }
+  /* Typography scale (Lato) */
+  h1,
+  .h1 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 57px;
+    letter-spacing: -0.0025em;
+    line-height: 1.1;
+  }
+  h2,
+  .h2 {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 32px;
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+  h3,
+  .h3 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0;
+    line-height: 1.25;
+  }
+  .text-dashboard {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  .text-title {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 22px;
+  }
+  .text-body {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .text-button {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0;
+  }
+  button,
+  .btn {
+    font-weight: 700;
   }
   *:focus-visible {
     outline: 2px solid var(--color-accent);
@@ -51,6 +130,18 @@
 }
 
 @layer utilities {
+  .bg-gradient-primary {
+    background-image: var(--gradient-primary);
+  }
+  .bg-gradient-brand {
+    background-image: var(--gradient-brand);
+  }
+  .text-gradient-brand {
+    background-image: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
   .container-px {
     padding-left: 1rem;
     padding-right: 1rem;
