@@ -73,13 +73,6 @@ task/
 │   ├── file.svg, globe.svg, next.svg, vercel.svg, window.svg  # Defaults from CRA
 └── src/                      # All application code
 ```
-
-Notable config detail — `next.config.ts` whitelists remote image hosts so `next/image` can optimise them:
-
-```ts
-images: { remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }, ... ] }
-```
-
 ---
 
 ## `src/` deep dive
@@ -133,13 +126,6 @@ src/app/
     └── profile/page.tsx     # Admin profile settings
 ```
 
-**Key files explained**
-
-- [src/app/layout.tsx](src/app/layout.tsx) — Loads Lato (UI) + Geist Mono (numerics), wires global `Providers`, mounts `Header` + `Footer` around `{children}`. Sets default `metadata` (title template `%s · Nova`).
-- [src/app/providers.tsx](src/app/providers.tsx) — Creates a singleton `QueryClient` per browser tab and a fresh one per server request. Defaults: `staleTime: 60s`, `refetchOnWindowFocus: false`.
-- [src/app/globals.css](src/app/globals.css) — Tailwind v4 entrypoint. Defines design tokens via `@theme` (colors, radii, shadows) consumed throughout components as `var(--color-*)`.
-- [src/app/admin/layout.tsx](src/app/admin/layout.tsx) — Standalone admin shell (sidebar nav + topbar). Replaces the customer header for `/admin/*` routes.
-
 ### `src/components/` — UI building blocks
 
 ```
@@ -167,8 +153,6 @@ src/components/
     ├── category-pills.tsx    # Scrollable category chips on home
     └── flash-countdown.tsx   # Flash-deal countdown timer for home banner
 ```
-
-All components are typed, tree-shakeable, and use the `cn()` helper from [src/lib/utils.ts](src/lib/utils.ts) to merge Tailwind classes safely.
 
 ### `src/services/` — data layer
 
