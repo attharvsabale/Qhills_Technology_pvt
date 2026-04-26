@@ -61,8 +61,6 @@ No environment variables required — all data is fetched from DummyJSON.
 
 ```
 task/
-├── AGENTS.md                 # Agent rules (this is NOT vanilla Next.js — read docs in node_modules/next/dist/docs)
-├── CLAUDE.md                 # Re-exports AGENTS.md for Claude tooling
 ├── README.md                 # This file
 ├── eslint.config.mjs         # Flat ESLint config (next/core-web-vitals + TS)
 ├── next.config.ts            # Next config: image remotePatterns
